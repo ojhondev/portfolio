@@ -8,7 +8,7 @@
   --color-canvas: #151a1a;
   --color-card-3: #3a4040;
   --color-lavender: #aca0fc;
-  --font-sans: var(--font-serif);
+  --font-sans: var(--font-display);
   --font-mono: var(--font-geist-mono);
   --font-signature: var(--font-signature);
 }
@@ -26,9 +26,9 @@ body {
 }
 
 body {
-  font-family: var(--font-serif), Georgia, serif;
-  letter-spacing: -0.01em;
-  font-optical-sizing: auto;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.014em;
   -webkit-font-smoothing: antialiased;
 }
 
