@@ -10,7 +10,7 @@ export const localePath = (l: Locale) => (l === defaultLocale ? "/" : `/${l}`);
 export const contact = {
   // Preencha para exibir no painel de contato (deixe vazio para esconder).
   email: "",
-  whatsapp: "", // ex.: "5511999999999"
+  whatsapp: "5514998570045", // DDI + DDD + número
   github: "https://github.com/ojhondev",
 };
 
@@ -203,6 +203,7 @@ const dict = {
     closeContact: "Close contact",
     close: "Close",
     ctaWhatsapp: "Message me on WhatsApp",
+    whatsappMessage: "Hi Jhonatan! I found you through your portfolio website and would like to talk about a project.",
     ctaEmail: "Send me an email",
     ctaGithub: "See my GitHub",
     copy: "Copy",
@@ -241,7 +242,8 @@ const dict = {
     contact: "Contato",
     closeContact: "Fechar contato",
     close: "Fechar",
-    ctaWhatsapp: "Falar no WhatsApp",
+    ctaWhatsapp: "Me chame no WhatsApp",
+    whatsappMessage: "Oi Jhonatan! Vim pelo seu site de portfólio e gostaria de conversar sobre um projeto.",
     ctaEmail: "Mandar um e-mail",
     ctaGithub: "Ver meu GitHub",
     copy: "Copiar",

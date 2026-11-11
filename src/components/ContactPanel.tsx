@@ -43,7 +43,8 @@ function Clock({ timeZone }: { timeZone: string }) {
 }
 
 export function primaryContact(t: ReturnType<typeof useContent>["t"]) {
-  if (contact.whatsapp) return { label: t.ctaWhatsapp, href: `https://wa.me/${contact.whatsapp}` };
+  if (contact.whatsapp)
+    return { label: t.ctaWhatsapp, href: `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(t.whatsappMessage)}` };
   if (contact.email) return { label: t.ctaEmail, href: `mailto:${contact.email}` };
   return { label: t.ctaGithub, href: contact.github };
 }
