@@ -180,7 +180,7 @@ const dict = {
   en: {
     role: "Product developer",
     tagline: "“Portfolio”",
-    headline: "I ship products",
+    headline: "I build things",
     intro: "I take ideas off paper and put them live: websites, platforms and complete SaaS — product, design and code, from zero to deploy.",
     learnMore: "Learn more",
     selectedWork: "Selected work ↓",
