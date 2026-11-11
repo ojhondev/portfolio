@@ -10,7 +10,7 @@ export default function LanguageSwitch() {
   return (
     <nav
       aria-label={t.language}
-      className="relative flex h-10 items-center rounded-full bg-[rgba(48,54,54,0.82)] p-1 text-[14px] backdrop-blur-xl"
+      className="relative flex h-10 items-center rounded-full bg-glass p-1 text-[14px] backdrop-blur-xl"
     >
       {locales.map((l) => {
         const active = l === locale;
@@ -21,7 +21,7 @@ export default function LanguageSwitch() {
             hrefLang={l === "pt" ? "pt-BR" : "en"}
             aria-current={active ? "page" : undefined}
             className={`relative grid h-8 min-w-10 place-items-center rounded-full px-3 font-mono uppercase transition ${
-              active ? "bg-bone text-ink" : "text-fog hover:text-bone"
+              active ? "bg-bone text-canvas" : "text-fog hover:text-bone"
             }`}
           >
             {l}

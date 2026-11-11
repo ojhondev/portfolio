@@ -5,6 +5,7 @@ import { useState } from "react";
 import { contact } from "@/content";
 import { useContent } from "./ContentContext";
 import LanguageSwitch from "./LanguageSwitch";
+import ThemeToggle from "./ThemeToggle";
 import { useClock } from "./useViewport";
 
 function Clock({ timeZone }: { timeZone: string }) {
@@ -60,7 +61,8 @@ export default function ContactPanel() {
     <div className="fixed top-2.5 right-2.5 z-50 flex items-start gap-1.5">
       <AnimatePresence initial={false}>
         {!open && (
-          <motion.div key="lang" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }}>
+          <motion.div key="lang" className="flex gap-1.5" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }}>
+            <ThemeToggle />
             <LanguageSwitch />
           </motion.div>
         )}
@@ -74,18 +76,18 @@ export default function ContactPanel() {
             exit={{ opacity: 0, scale: 0.6, filter: "blur(8px)" }}
             transition={{ type: "spring", stiffness: 380, damping: 32 }}
             style={{ transformOrigin: "top right" }}
-            className="w-[min(340px,calc(100vw-20px))] rounded-[24px] bg-[rgba(48,54,54,0.82)] p-1 backdrop-blur-xl"
+            className="w-[min(340px,calc(100vw-20px))] rounded-[24px] bg-glass p-1 backdrop-blur-xl"
           >
-            <div className="rounded-[20px] bg-white/[0.04]">
+            <div className="rounded-[20px] bg-tint/[0.04]">
               <div className="flex items-center justify-between px-3 pt-3">
-                <span className="flex items-center gap-2 rounded-full bg-white/[0.06] py-1 pr-3 pl-3 text-[15px]">
+                <span className="flex items-center gap-2 rounded-full bg-tint/[0.06] py-1 pr-3 pl-3 text-[15px]">
                   {person.available ? t.available : t.busy}
                   <span className={`size-3 rounded-full ${person.available ? "bg-lavender" : "bg-ash"}`} />
                 </span>
                 <button
                   onClick={() => setOpen(false)}
                   aria-label={t.closeContact}
-                  className="grid size-9 place-items-center rounded-full text-fog transition hover:bg-white/10 hover:text-bone"
+                  className="grid size-9 place-items-center rounded-full text-fog transition hover:bg-tint/10 hover:text-bone"
                 >
                   <svg width="14" height="14" viewBox="0 0 14 14"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="1.6" /></svg>
                 </button>
@@ -110,7 +112,7 @@ export default function ContactPanel() {
               {primary.label} <span aria-hidden>→</span>
             </a>
             {contact.email && (
-              <div className="mt-1 flex h-[54px] items-center justify-between rounded-[36px] bg-white/[0.05] px-5 text-[17px]">
+              <div className="mt-1 flex h-[54px] items-center justify-between rounded-[36px] bg-tint/[0.05] px-5 text-[17px]">
                 <a href={`mailto:${contact.email}`} className="truncate hover:underline">{contact.email}</a>
                 <button
                   onClick={() => {
@@ -124,14 +126,6 @@ export default function ContactPanel() {
                 </button>
               </div>
             )}
-            <a
-              href={contact.github}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-1 flex h-[54px] items-center justify-between rounded-[36px] bg-white/[0.05] px-5 text-[17px] transition hover:bg-white/10"
-            >
-              github.com/ojhondev <span aria-hidden>→</span>
-            </a>
           </motion.div>
         ) : (
           <motion.button
@@ -140,7 +134,7 @@ export default function ContactPanel() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             onClick={() => setOpen(true)}
-            className="group flex h-10 items-center gap-2 rounded-full bg-[rgba(48,54,54,0.82)] pr-3 pl-4 text-[17px] backdrop-blur-xl transition hover:bg-[rgba(70,78,78,0.9)]"
+            className="group flex h-10 items-center gap-2 rounded-full bg-glass pr-3 pl-4 text-[17px] backdrop-blur-xl transition hover:bg-glass-hover"
           >
             {t.contact}
             <svg width="16" height="16" viewBox="0 0 16 16" className="transition-transform duration-300 group-hover:rotate-90">

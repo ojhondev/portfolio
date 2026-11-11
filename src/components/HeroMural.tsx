@@ -10,7 +10,20 @@ type Blob = { x: number; y: number; r: number; vx: number; vy: number; c: string
  * Manchete em canvas: letras claras preenchidas por manchas de cor orgânicas
  * que derivam sozinhas e são "pintadas" por onde o cursor passa.
  */
-export default function HeroMural({ text, maxHeight = Infinity }: { text: string; maxHeight?: number }) {
+export default function HeroMural({
+  text,
+  maxHeight = Infinity,
+  theme = "dark",
+}: {
+  text: string;
+  maxHeight?: number;
+  theme?: "dark" | "light";
+}) {
+  // cor base das letras (as manchas coloridas vão por cima)
+  const baseRef = useRef(theme === "light" ? "rgba(21,26,26,0.92)" : "rgba(242,243,243,0.9)");
+  useEffect(() => {
+    baseRef.current = theme === "light" ? "rgba(21,26,26,0.92)" : "rgba(242,243,243,0.9)";
+  }, [theme]);
   const wrap = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
 
@@ -107,7 +120,7 @@ export default function HeroMural({ text, maxHeight = Infinity }: { text: string
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, w, h);
       ctx.globalCompositeOperation = "source-over";
-      ctx.fillStyle = "rgba(242,243,243,0.9)";
+      ctx.fillStyle = baseRef.current;
       ctx.fillRect(0, 0, w, h);
 
       for (const b of blobs) {

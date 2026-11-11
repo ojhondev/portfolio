@@ -1,6 +1,8 @@
 // Todo o texto do portfólio fica aqui — edite livremente.
 // Inglês é o idioma principal (rota "/"), português é secundário ("/pt").
 
+export const SITE_URL = "https://devjhon.tech";
+
 export const locales = ["en", "pt"] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "en";
@@ -40,7 +42,6 @@ type ProjectDef = {
 const L = {
   site: { en: "Website", pt: "Site" },
   store: { en: "Store", pt: "Loja" },
-  github: { en: "GitHub", pt: "GitHub" },
 };
 const ROLE_FULL: Text = { en: "Product, design & development", pt: "Produto, design e desenvolvimento" };
 const ROLE_DD: Text = { en: "Design & development", pt: "Design e desenvolvimento" };
@@ -59,7 +60,6 @@ const projectDefs: ProjectDef[] = [
     shots: ["estudiorestaura"],
     links: [
       { label: L.site, href: "https://estudiorestaura.vercel.app" },
-      { label: L.github, href: "https://github.com/ojhondev/estudiorestaura" },
     ],
   },
   {
@@ -75,7 +75,6 @@ const projectDefs: ProjectDef[] = [
     shots: ["dattis"],
     links: [
       { label: L.site, href: "https://dattum-rho.vercel.app" },
-      { label: L.github, href: "https://github.com/ojhondev/dattum" },
     ],
   },
   {
@@ -91,7 +90,6 @@ const projectDefs: ProjectDef[] = [
     shots: ["archray"],
     links: [
       { label: L.site, href: "https://archray.com.br" },
-      { label: L.github, href: "https://github.com/ojhondev/oraclo" },
     ],
   },
   {
@@ -107,7 +105,6 @@ const projectDefs: ProjectDef[] = [
     shots: ["stokys"],
     links: [
       { label: L.site, href: "https://stokys.vercel.app" },
-      { label: L.github, href: "https://github.com/ojhondev/stokys" },
     ],
   },
   {
@@ -124,7 +121,6 @@ const projectDefs: ProjectDef[] = [
     links: [
       { label: { en: "SoftMotors", pt: "SoftMotors" }, href: "https://softmotors.vercel.app" },
       { label: { en: "Ranger theme", pt: "Tema Ranger" }, href: "https://temaranger.vercel.app" },
-      { label: L.github, href: "https://github.com/ojhondev/temaranger" },
     ],
   },
   {
@@ -140,7 +136,6 @@ const projectDefs: ProjectDef[] = [
     shots: ["mobiletto"],
     links: [
       { label: L.site, href: "https://mobiletto.vercel.app" },
-      { label: L.github, href: "https://github.com/ojhondev/mobiletto" },
     ],
   },
   {
@@ -156,7 +151,6 @@ const projectDefs: ProjectDef[] = [
     shots: ["galeriasacra"],
     links: [
       { label: L.store, href: "https://galeriasacra.vercel.app" },
-      { label: L.github, href: "https://github.com/ojhondev/galeriasacra" },
     ],
   },
 ];
@@ -200,8 +194,12 @@ const dict = {
     links: "Links",
     screen: "screen",
     language: "Language",
-    metaTitle: "Jhonatan Ribeiro — Portfolio",
-    metaDescription: "Systems analyst (FATEC) focused on product: from brand websites to complex software, built from zero to live.",
+    themeLight: "Switch to light theme",
+    themeDark: "Switch to dark theme",
+    metaTitle: "Website & App Developer with AI - JhonDev",
+    metaDescription: "JhonDev builds websites and apps with AI: from brand websites and e-commerce to SaaS and complex software, from zero to live. Systems analyst (FATEC).",
+    metaKeywords: "website developer, app developer, AI developer, Next.js developer, SaaS development, web app, JhonDev",
+    ogAlt: "JhonDev — Website & App Developer with AI",
   },
   pt: {
     role: "Dev",
@@ -241,8 +239,12 @@ const dict = {
     links: "Links",
     screen: "tela",
     language: "Idioma",
-    metaTitle: "Jhonatan Ribeiro — Portfólio",
-    metaDescription: "Analista de sistemas (FATEC) com foco em produto: de sites institucionais a softwares complexos, do zero ao ar.",
+    themeLight: "Mudar para o tema claro",
+    themeDark: "Mudar para o tema escuro",
+    metaTitle: "Desenvolvedor de Sites e Aplicativos com IA - JhonDev",
+    metaDescription: "JhonDev cria sites e aplicativos com IA: de sites institucionais e e-commerces a SaaS e softwares complexos, do zero ao ar. Analista de sistemas (FATEC).",
+    metaKeywords: "desenvolvedor de sites, desenvolvedor de aplicativos, desenvolvimento com IA, criação de sites, desenvolvedor Next.js, SaaS, JhonDev",
+    ogAlt: "JhonDev — Desenvolvedor de Sites e Aplicativos com IA",
   },
 } satisfies Record<Locale, Record<string, string | string[]>>;
 

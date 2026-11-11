@@ -1,28 +1,58 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-bone: #f2f3f3;
-  --color-fog: #8c9393;
-  --color-ash: #555b5b;
+  /* cores que mudam com o tema (ver :root e [data-theme="light"]) */
+  --color-bone: var(--fg);
+  --color-fog: var(--muted);
+  --color-ash: var(--ash);
+  --color-canvas: var(--bg);
+  --color-card-3: var(--card3);
+  --color-glass: var(--glass);
+  --color-glass-hover: var(--glass-hover);
+  --color-tint: var(--tint);
+  /* fixas */
   --color-ink: #151a1a;
-  --color-canvas: #151a1a;
-  --color-card-3: #3a4040;
   --color-lavender: #aca0fc;
   --font-sans: var(--font-display);
   --font-mono: var(--font-geist-mono);
   --font-plex: var(--font-plex);
 }
 
+/* tema escuro (padrão) */
 :root {
   color-scheme: dark;
+  --bg: #151a1a;
+  --fg: #f2f3f3;
+  --muted: #8c9393;
+  --ash: #555b5b;
+  --card3: #3a4040;
+  --glass: rgba(48, 54, 54, 0.82);
+  --glass-hover: rgba(70, 78, 78, 0.9);
+  --tint: #ffffff;
+  --video-veil: 68%;
+}
+
+/* tema claro */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #efeee9;
+  --fg: #151a1a;
+  --muted: #646b6b;
+  --ash: #a6abab;
+  --card3: #dfe0db;
+  --glass: rgba(255, 255, 255, 0.78);
+  --glass-hover: rgba(255, 255, 255, 0.95);
+  --tint: #000000;
+  --video-veil: 84%;
 }
 
 html,
 body {
   height: 100%;
   overflow: hidden;
-  background: #151a1a;
-  color: #f2f3f3;
+  background: var(--bg);
+  color: var(--fg);
+  transition: background-color 0.4s, color 0.4s;
 }
 
 body {
@@ -67,7 +97,7 @@ h4 {
 
 .book-scroll {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+  scrollbar-color: color-mix(in srgb, var(--tint) 25%, transparent) transparent;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -5,9 +5,11 @@ import Image from "next/image";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { Content, Project } from "@/content";
 import { ContentProvider, useContent } from "./ContentContext";
+import BackgroundVideo from "./BackgroundVideo";
 import Book from "./Book";
 import ContactPanel from "./ContactPanel";
 import HeroMural from "./HeroMural";
+import { type Theme, useTheme } from "./theme";
 import { useClock, useViewport } from "./useViewport";
 
 export type Shot = { src: string; w: number; h: number };
@@ -17,9 +19,13 @@ const TAB_H = 40;
 const ROW = 44; // altura da faixa de abas quando uma pasta está aberta
 const SPRING = { type: "spring", stiffness: 210, damping: 30, mass: 0.9 } as const;
 
-// cores das pastas: cada camada um pouco mais clara
-function cardColor(i: number, n: number) {
+// cores das pastas: cada camada um pouco mais clara (no tema claro, tons de papel)
+function cardColor(i: number, n: number, theme: Theme) {
   const t = n > 1 ? i / (n - 1) : 0;
+  if (theme === "light") {
+    const l = 0.84 + t * 0.1;
+    return `color(srgb ${(l * 1.0).toFixed(4)} ${(l * 1.002).toFixed(4)} ${(l * 0.985).toFixed(4)})`;
+  }
   const l = 0.19 + t * 0.075;
   return `color(srgb ${l.toFixed(4)} ${(l * 1.105).toFixed(4)} ${(l * 1.105).toFixed(4)})`;
 }
@@ -36,6 +42,7 @@ function PortfolioView({ work }: { work: WorkItem[] }) {
   const { person, t } = useContent();
   const vp = useViewport();
   const clock = useClock(person.timeZone);
+  const theme = useTheme();
   const [active, setActive] = useState<number | null>(null);
   const [hover, setHover] = useState<number | null>(null);
   const [book, setBook] = useState(false);
@@ -118,6 +125,9 @@ function PortfolioView({ work }: { work: WorkItem[] }) {
     <div className="relative h-dvh w-full overflow-hidden select-none">
       <ContactPanel />
 
+      {/* vídeo de fundo atrás da manchete, entrando um pouco atrás das pastas */}
+      <BackgroundVideo height={top0 + Math.min(220, H * 0.22)} hidden={anyOpen} />
+
       {/* cabeçalho + manchete */}
       <motion.header
         ref={headerRef}
@@ -134,7 +144,7 @@ function PortfolioView({ work }: { work: WorkItem[] }) {
           </h3>
         </nav>
         <div className="px-3 pt-1">
-          <HeroMural text={t.headline} maxHeight={heroMax} />
+          <HeroMural text={t.headline} maxHeight={heroMax} theme={theme} />
         </div>
         <div className="grid grid-cols-1 gap-1 px-3 pt-4 pb-5 text-[15px] md:grid-cols-4 md:text-[18px] [@media(min-width:768px)_and_(max-height:820px)]:pt-3 [@media(min-width:768px)_and_(max-height:820px)]:pb-4 [@media(min-width:768px)_and_(max-height:820px)]:text-[16px]">
           <h3 className="hidden md:block">{t.selectedWork}</h3>
@@ -213,7 +223,7 @@ function PortfolioView({ work }: { work: WorkItem[] }) {
                   className="folder-tab title absolute top-0 flex items-center justify-center text-[16px] md:text-[18px]"
                   style={{
                     height: TAB_H,
-                    background: cardColor(i, n),
+                    background: cardColor(i, n, theme),
                     pointerEvents: hideTabMobile ? "none" : "auto",
                     color: isActive ? "var(--color-bone)" : collapsedTop ? "var(--color-fog)" : "var(--color-bone)",
                   }}
@@ -226,8 +236,11 @@ function PortfolioView({ work }: { work: WorkItem[] }) {
                   style={{
                     top: TAB_H - 1,
                     height: cardH,
-                    background: cardColor(i, n),
-                    boxShadow: "0 -1px 0 rgba(255,255,255,0.05), 0 -18px 40px rgba(0,0,0,0.25)",
+                    background: cardColor(i, n, theme),
+                    boxShadow:
+                      theme === "light"
+                        ? "0 -1px 0 rgba(255,255,255,0.7), 0 -14px 32px rgba(0,0,0,0.08)"
+                        : "0 -1px 0 rgba(255,255,255,0.05), 0 -18px 40px rgba(0,0,0,0.25)",
                     pointerEvents: anyOpen ? (isActive ? "auto" : "none") : "auto",
                   }}
                   onMouseEnter={() => !anyOpen && setHover(i)}
@@ -353,7 +366,7 @@ function Info({ item, height, mobile }: { item: WorkItem; height: number; mobile
   const { t } = useContent();
   return (
     <article
-      className="flex shrink-0 flex-col justify-between overflow-y-auto rounded-[14px] bg-white/[0.045] p-5 md:p-6"
+      className="flex shrink-0 flex-col justify-between overflow-y-auto rounded-[14px] bg-tint/[0.045] p-5 md:p-6"
       style={{ width: mobile ? 300 : 380, height }}
     >
       <div>
@@ -361,7 +374,7 @@ function Info({ item, height, mobile }: { item: WorkItem; height: number; mobile
         <h4 className="mt-6 text-[15px] text-fog">{t.scope}</h4>
         <p className="mt-1.5 text-[17px] leading-[1.28] md:text-[18px]">{item.scope}</p>
       </div>
-      <dl className="mt-6 grid grid-cols-[88px_1fr] gap-y-2.5 border-t border-white/[0.08] pt-4 text-[15px]">
+      <dl className="mt-6 grid grid-cols-[88px_1fr] gap-y-2.5 border-t border-tint/[0.08] pt-4 text-[15px]">
         <dt className="text-fog">{t.roleLabel}</dt>
         <dd>{item.role}</dd>
         <dt className="text-fog">{t.year}</dt>
@@ -369,7 +382,7 @@ function Info({ item, height, mobile }: { item: WorkItem; height: number; mobile
         <dt className="text-fog">{t.stack}</dt>
         <dd className="flex flex-wrap gap-1.5">
           {item.stack.map((s) => (
-            <span key={s} className="rounded-full border border-white/15 px-2.5 py-0.5 font-mono text-[11px] text-fog">
+            <span key={s} className="rounded-full border border-tint/15 px-2.5 py-0.5 font-mono text-[11px] text-fog">
               {s}
             </span>
           ))}
@@ -377,7 +390,7 @@ function Info({ item, height, mobile }: { item: WorkItem; height: number; mobile
         <dt className="text-fog">{t.links}</dt>
         <dd className="flex flex-wrap gap-x-4 gap-y-1">
           {item.links.map((l) => (
-            <a key={l.href} href={l.href} target="_blank" rel="noreferrer" className="underline decoration-white/30 underline-offset-4 hover:decoration-white" onClick={(e) => e.stopPropagation()}>
+            <a key={l.href} href={l.href} target="_blank" rel="noreferrer" className="underline decoration-tint/30 underline-offset-4 hover:decoration-bone" onClick={(e) => e.stopPropagation()}>
               {l.label}
             </a>
           ))}

@@ -72,7 +72,7 @@ export default function Book({ pageW, pageH }: { pageW: number; pageH: number })
           onClick={() => setFlipped((f) => !f)}
         >
           <div
-            className="absolute inset-0 title grid place-items-center rounded-[20px] bg-lavender text-[clamp(80px,12vw,180px)] leading-none tracking-[-0.04em] text-bone"
+            className="absolute inset-0 title grid place-items-center rounded-[20px] bg-lavender text-[clamp(80px,12vw,180px)] leading-none tracking-[-0.04em] text-[#f2f3f3]"
             style={{ backfaceVisibility: "hidden" }}
           >
             {t.cover}
@@ -116,7 +116,7 @@ function RightPage({ withPhoto = false }: { withPhoto?: boolean }) {
       </a>
 
       <h4 className="mt-10 text-[15px] text-fog">{t.projects}</h4>
-      <ul className="mt-3 divide-y divide-white/[0.07] border-t border-white/[0.07]">
+      <ul className="mt-3 divide-y divide-tint/[0.07] border-t border-tint/[0.07]">
         {projects.map((p) => (
           <li key={p.slug} className="grid grid-cols-[52px_1fr] gap-x-3 py-3">
             <span className="font-mono text-[13px] text-fog pt-1">{p.year}</span>
@@ -125,7 +125,7 @@ function RightPage({ withPhoto = false }: { withPhoto?: boolean }) {
               <div className="text-[15px] text-fog">{p.role}</div>
               <div className="mt-1.5 flex flex-wrap gap-1.5">
                 {p.stack.map((s) => (
-                  <span key={s} className="rounded-full border border-white/15 px-2.5 py-0.5 font-mono text-[11px] text-fog">
+                  <span key={s} className="rounded-full border border-tint/15 px-2.5 py-0.5 font-mono text-[11px] text-fog">
                     {s}
                   </span>
                 ))}
