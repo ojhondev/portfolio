@@ -4,23 +4,26 @@ import { motion } from "motion/react";
 import { useEffect, useRef } from "react";
 
 /**
- * Vídeo discreto atrás da manchete e um pouco atrás das pastas:
- * véu escuro por cima e, na parte de baixo, blur progressivo + gradiente
- * para a cor da página, fazendo a transição suave até as pastas.
+ * Vídeo discreto atrás da manchete e um pouco atrás das pastas.
+ * O blur da parte de baixo já vem "assado" no arquivo (ffmpeg), então aqui
+ * só há véu + gradiente — nada de backdrop-filter, que pesava a cada quadro.
  */
 export default function BackgroundVideo({ height, hidden }: { height: number; hidden: boolean }) {
   const ref = useRef<HTMLVideoElement>(null);
 
+  // toca só quando visível; pausa com pasta/livro aberto, aba oculta ou "reduzir movimento"
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
-    // respeita quem prefere menos movimento: fica só o poster
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      v.pause();
-      return;
-    }
-    v.play().catch(() => {});
-  }, []);
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const sync = () => {
+      if (reduce || hidden || document.hidden) v.pause();
+      else v.play().catch(() => {});
+    };
+    sync();
+    document.addEventListener("visibilitychange", sync);
+    return () => document.removeEventListener("visibilitychange", sync);
+  }, [hidden]);
 
   return (
     <motion.div
@@ -33,11 +36,10 @@ export default function BackgroundVideo({ height, hidden }: { height: number; hi
       <video
         ref={ref}
         className="absolute inset-0 h-full w-full object-cover"
-        autoPlay
         muted
         loop
         playsInline
-        preload="auto"
+        preload="metadata"
         poster="/bg/code-poster.jpg"
       >
         <source src="/bg/code.webm" type="video/webm" />
@@ -45,16 +47,6 @@ export default function BackgroundVideo({ height, hidden }: { height: number; hi
       </video>
       {/* véu escuro (no tema claro, véu da cor do papel) */}
       <div className="absolute inset-0" style={{ background: "color-mix(in srgb, var(--bg) var(--video-veil), transparent)" }} />
-      {/* blur progressivo na metade de baixo */}
-      <div
-        className="absolute inset-x-0 bottom-0 h-[60%]"
-        style={{
-          backdropFilter: "blur(14px)",
-          WebkitBackdropFilter: "blur(14px)",
-          maskImage: "linear-gradient(to bottom, transparent, black 70%)",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent, black 70%)",
-        }}
-      />
       {/* gradiente final para a cor da página, emendando nas pastas */}
       <div className="absolute inset-x-0 bottom-0 h-[55%]" style={{ background: "linear-gradient(to bottom, transparent, var(--bg) 92%)" }} />
     </motion.div>

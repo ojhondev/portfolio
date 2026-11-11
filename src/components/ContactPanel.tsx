@@ -134,7 +134,7 @@ export default function ContactPanel() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             onClick={() => setOpen(true)}
-            className="group flex h-10 items-center gap-2 rounded-full bg-glass pr-3 pl-4 text-[17px] backdrop-blur-xl transition hover:bg-glass-hover"
+            className="group flex h-10 items-center gap-2 rounded-full bg-glass pr-3 pl-4 text-[17px] transition hover:bg-glass-hover"
           >
             {t.contact}
             <svg width="16" height="16" viewBox="0 0 16 16" className="transition-transform duration-300 group-hover:rotate-90">

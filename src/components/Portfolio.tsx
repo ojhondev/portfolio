@@ -144,7 +144,7 @@ function PortfolioView({ work }: { work: WorkItem[] }) {
           </h3>
         </nav>
         <div className="px-3 pt-1">
-          <HeroMural text={t.headline} maxHeight={heroMax} theme={theme} />
+          <HeroMural text={t.headline} maxHeight={heroMax} theme={theme} paused={anyOpen} />
         </div>
         <div className="grid grid-cols-1 gap-1 px-3 pt-4 pb-5 text-[15px] md:grid-cols-4 md:text-[18px] [@media(min-width:768px)_and_(max-height:820px)]:pt-3 [@media(min-width:768px)_and_(max-height:820px)]:pb-4 [@media(min-width:768px)_and_(max-height:820px)]:text-[16px]">
           <h3 className="hidden md:block">{t.selectedWork}</h3>

@@ -26,7 +26,7 @@
   --muted: #8c9393;
   --ash: #555b5b;
   --card3: #3a4040;
-  --glass: rgba(48, 54, 54, 0.82);
+  --glass: rgba(48, 54, 54, 0.9);
   --glass-hover: rgba(70, 78, 78, 0.9);
   --tint: #ffffff;
   --video-veil: 68%;
@@ -40,7 +40,7 @@
   --muted: #646b6b;
   --ash: #a6abab;
   --card3: #dfe0db;
-  --glass: rgba(255, 255, 255, 0.78);
+  --glass: rgba(255, 255, 255, 0.9);
   --glass-hover: rgba(255, 255, 255, 0.95);
   --tint: #000000;
   --video-veil: 84%;

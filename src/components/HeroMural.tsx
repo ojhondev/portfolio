@@ -14,11 +14,18 @@ export default function HeroMural({
   text,
   maxHeight = Infinity,
   theme = "dark",
+  paused = false,
 }: {
   text: string;
   maxHeight?: number;
   theme?: "dark" | "light";
+  /** true quando pasta/livro cobre a manchete: para de desenhar */
+  paused?: boolean;
 }) {
+  const pausedRef = useRef(paused);
+  useEffect(() => {
+    pausedRef.current = paused;
+  }, [paused]);
   // cor base das letras (as manchas coloridas vão por cima)
   const baseRef = useRef(theme === "light" ? "rgba(21,26,26,0.92)" : "rgba(242,243,243,0.9)");
   useEffect(() => {
@@ -37,6 +44,9 @@ export default function HeroMural({
     let h = 0;
     let dpr = 1;
     let raf = 0;
+    let last = 0;
+    let dirty = true; // com "reduzir movimento", só redesenha quando algo muda
+    let lastBase = baseRef.current;
     let blobs: Blob[] = [];
     const pointer = { x: -9999, y: -9999, active: false, last: 0 };
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -44,7 +54,7 @@ export default function HeroMural({
     const fontFamily = getComputedStyle(document.documentElement).getPropertyValue("--font-display").trim() || "sans-serif";
 
     function layout() {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       w = box.clientWidth;
       // telas estreitas: quebra a manchete em duas linhas
       const words = text.split(" ");
@@ -98,6 +108,7 @@ export default function HeroMural({
         y += m.desc * m.size + gap;
       }
       seed();
+      dirty = true;
     }
 
     function seed() {
@@ -117,6 +128,17 @@ export default function HeroMural({
     }
 
     function frame(t: number) {
+      raf = requestAnimationFrame(frame);
+      // ~30fps basta para o movimento lento das manchas; nada a fazer se estiver coberto
+      if (t - last < 32 || pausedRef.current) return;
+      last = t;
+      if (baseRef.current !== lastBase) {
+        lastBase = baseRef.current;
+        dirty = true;
+      }
+      const mortal = blobs.some((b) => b.life !== Infinity);
+      if (reduce && !dirty && !mortal) return;
+      dirty = false;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, w, h);
       ctx.globalCompositeOperation = "source-over";
@@ -134,7 +156,7 @@ export default function HeroMural({
         if (b.y > h + b.r) b.y = -b.r;
         if (b.life !== Infinity) {
           b.life -= 1;
-          b.r *= 0.996;
+          b.r *= 0.993;
         }
         // mancha orgânica: círculo deformado
         ctx.fillStyle = b.c;
@@ -157,7 +179,6 @@ export default function HeroMural({
       ctx.globalCompositeOperation = "destination-in";
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.drawImage(mask, 0, 0);
-      raf = requestAnimationFrame(frame);
     }
 
     function onMove(e: PointerEvent) {
@@ -175,11 +196,12 @@ export default function HeroMural({
         vx: (x - pointer.x) * 0.01 || 0,
         vy: (y - pointer.y) * 0.01 || 0,
         c: COLORS[Math.floor(Math.random() * 3)],
-        life: 260,
+        life: 150,
       });
       pointer.x = x;
       pointer.y = y;
-      if (blobs.length > 120) blobs.splice(Math.round(w / 90), 1);
+      if (blobs.length > 60) blobs.splice(Math.round(w / 90), 1);
+      dirty = true;
     }
 
     const ro = new ResizeObserver(() => layout());

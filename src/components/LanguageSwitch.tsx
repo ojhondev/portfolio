@@ -10,7 +10,7 @@ export default function LanguageSwitch() {
   return (
     <nav
       aria-label={t.language}
-      className="relative flex h-10 items-center rounded-full bg-glass p-1 text-[14px] backdrop-blur-xl"
+      className="relative flex h-10 items-center rounded-full bg-glass p-1 text-[14px]"
     >
       {locales.map((l) => {
         const active = l === locale;

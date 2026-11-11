@@ -14,7 +14,7 @@ export default function ThemeToggle() {
       onClick={() => setTheme(next)}
       aria-label={next === "light" ? t.themeLight : t.themeDark}
       title={next === "light" ? t.themeLight : t.themeDark}
-      className="relative grid size-10 place-items-center overflow-hidden rounded-full bg-glass text-bone backdrop-blur-xl transition hover:bg-glass-hover"
+      className="relative grid size-10 place-items-center overflow-hidden rounded-full bg-glass text-bone transition hover:bg-glass-hover"
     >
       <AnimatePresence mode="wait" initial={false}>
         <motion.span
