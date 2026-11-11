@@ -73,14 +73,10 @@ function PortfolioView({ work }: { work: WorkItem[] }) {
   const W = vp.w;
   const H = vp.h;
   const visibleLast = Math.max(TAB_H + 36, 76);
-  // espaço mínimo por pasta para dar para ver as marcas/produtos
-  const MIN_STEP = mobile ? 50 : 64;
-  const NAV_H = mobile ? 48 : 52;
-  // telas baixas de desktop (notebook): texto de apresentação vai para o lado da manchete
-  const naturalHeader = NAV_H + W * 0.215 + 84;
-  const compact = !mobile && (H - naturalHeader - visibleLast) / Math.max(1, n - 1) < MIN_STEP;
-  const chrome = compact ? NAV_H + 20 : NAV_H + (mobile ? 110 : 90);
-  const heroMax = Math.max(56, H - chrome - visibleLast - (n - 1) * MIN_STEP);
+  // telas baixas (notebook): mesma estrutura da tela grande, só a manchete um pouco menor
+  // (26% da altura em ~640px, crescendo até 36% perto de 900px; acima disso ocupa a largura toda)
+  const heroRatio = Math.min(0.36, Math.max(0.26, 0.26 + ((H - 640) / 260) * 0.1));
+  const heroMax = !mobile && H < 900 ? Math.max(150, H * heroRatio) : Infinity;
   const top0 = Math.min(headerH, H - 160);
   const step = n > 1 ? Math.max(28, (H - top0 - visibleLast) / (n - 1)) : 0;
   const cardH = H - TAB_H - ROW + 1;
@@ -129,7 +125,7 @@ function PortfolioView({ work }: { work: WorkItem[] }) {
         transition={{ duration: 0.5 }}
         className="relative z-0"
       >
-        <nav className="grid grid-cols-2 gap-1 px-3 pt-4 pb-3 text-[15px] md:grid-cols-4 md:pr-[260px] md:text-[18px]">
+        <nav className="grid grid-cols-2 gap-1 px-3 pt-4 pb-3 text-[15px] md:grid-cols-4 md:pr-[260px] md:text-[18px] [@media(min-width:768px)_and_(max-height:820px)]:pb-2 [@media(min-width:768px)_and_(max-height:820px)]:text-[16px]">
           <h3>{person.name}</h3>
           <h3 className="hidden md:block">{t.role}</h3>
           <h3 className="hidden md:block">{t.tagline}</h3>
@@ -137,23 +133,10 @@ function PortfolioView({ work }: { work: WorkItem[] }) {
             <span className="tabular-nums">{clock.label}</span> {person.city}
           </h3>
         </nav>
-        <div className={compact ? "flex items-end gap-6 px-3 pt-1 pb-4" : "px-3 pt-1"}>
-          <div className="min-w-0 flex-1">
-            <HeroMural text={t.headline} maxHeight={heroMax} />
-          </div>
-          {compact && (
-            <div className="w-[min(380px,34vw)] shrink-0 pb-1 text-[16px] leading-[1.25]">
-              <h3 className="mb-2 text-fog">{t.selectedWork}</h3>
-              <p>
-                {t.intro}{" "}
-                <button onClick={() => setBook(true)} className="text-lavender underline-offset-4 hover:underline">
-                  {t.learnMore}
-                </button>
-              </p>
-            </div>
-          )}
+        <div className="px-3 pt-1">
+          <HeroMural text={t.headline} maxHeight={heroMax} />
         </div>
-        <div className={compact ? "hidden" : "grid grid-cols-1 gap-1 px-3 pt-4 pb-5 text-[15px] md:grid-cols-4 md:text-[18px]"}>
+        <div className="grid grid-cols-1 gap-1 px-3 pt-4 pb-5 text-[15px] md:grid-cols-4 md:text-[18px] [@media(min-width:768px)_and_(max-height:820px)]:pt-3 [@media(min-width:768px)_and_(max-height:820px)]:pb-4 [@media(min-width:768px)_and_(max-height:820px)]:text-[16px]">
           <h3 className="hidden md:block">{t.selectedWork}</h3>
           <p className="max-w-[560px] leading-[1.25] md:col-span-2">
             {t.intro}{" "}
