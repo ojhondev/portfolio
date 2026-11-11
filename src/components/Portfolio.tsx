@@ -72,8 +72,16 @@ function PortfolioView({ work }: { work: WorkItem[] }) {
   // ---- geometria das pastas ----
   const W = vp.w;
   const H = vp.h;
-  const top0 = Math.min(headerH, H - 160);
   const visibleLast = Math.max(TAB_H + 36, 76);
+  // espaço mínimo por pasta para dar para ver as marcas/produtos
+  const MIN_STEP = mobile ? 50 : 64;
+  const NAV_H = mobile ? 48 : 52;
+  // telas baixas de desktop (notebook): texto de apresentação vai para o lado da manchete
+  const naturalHeader = NAV_H + W * 0.215 + 84;
+  const compact = !mobile && (H - naturalHeader - visibleLast) / Math.max(1, n - 1) < MIN_STEP;
+  const chrome = compact ? NAV_H + 20 : NAV_H + (mobile ? 110 : 90);
+  const heroMax = Math.max(56, H - chrome - visibleLast - (n - 1) * MIN_STEP);
+  const top0 = Math.min(headerH, H - 160);
   const step = n > 1 ? Math.max(28, (H - top0 - visibleLast) / (n - 1)) : 0;
   const cardH = H - TAB_H - ROW + 1;
   const pad = mobile ? 12 : 64;
@@ -99,7 +107,8 @@ function PortfolioView({ work }: { work: WorkItem[] }) {
   const yFor = (i: number) => {
     if (book) return H - ROW;
     if (active === null) {
-      const lift = hover === i ? -14 : 0;
+      // no hover a pasta sobe o bastante para mostrar mais do site
+      const lift = hover === i ? -Math.round(Math.min(56, Math.max(14, step * 0.6))) : 0;
       return top0 + i * step + lift;
     }
     if (i < active) return 0;
@@ -128,10 +137,23 @@ function PortfolioView({ work }: { work: WorkItem[] }) {
             <span className="tabular-nums">{clock.label}</span> {person.city}
           </h3>
         </nav>
-        <div className="px-3 pt-1">
-          <HeroMural text={t.headline} />
+        <div className={compact ? "flex items-end gap-6 px-3 pt-1 pb-4" : "px-3 pt-1"}>
+          <div className="min-w-0 flex-1">
+            <HeroMural text={t.headline} maxHeight={heroMax} />
+          </div>
+          {compact && (
+            <div className="w-[min(380px,34vw)] shrink-0 pb-1 text-[16px] leading-[1.25]">
+              <h3 className="mb-2 text-fog">{t.selectedWork}</h3>
+              <p>
+                {t.intro}{" "}
+                <button onClick={() => setBook(true)} className="text-lavender underline-offset-4 hover:underline">
+                  {t.learnMore}
+                </button>
+              </p>
+            </div>
+          )}
         </div>
-        <div className="grid grid-cols-1 gap-1 px-3 pt-4 pb-5 text-[15px] md:grid-cols-4 md:text-[18px]">
+        <div className={compact ? "hidden" : "grid grid-cols-1 gap-1 px-3 pt-4 pb-5 text-[15px] md:grid-cols-4 md:text-[18px]"}>
           <h3 className="hidden md:block">{t.selectedWork}</h3>
           <p className="max-w-[560px] leading-[1.25] md:col-span-2">
             {t.intro}{" "}

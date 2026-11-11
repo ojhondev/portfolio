@@ -10,7 +10,7 @@ type Blob = { x: number; y: number; r: number; vx: number; vy: number; c: string
  * Manchete em canvas: letras claras preenchidas por manchas de cor orgânicas
  * que derivam sozinhas e são "pintadas" por onde o cursor passa.
  */
-export default function HeroMural({ text }: { text: string }) {
+export default function HeroMural({ text, maxHeight = Infinity }: { text: string; maxHeight?: number }) {
   const wrap = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
 
@@ -52,6 +52,12 @@ export default function HeroMural({ text }: { text: string }) {
           desc: m.actualBoundingBoxDescent / 100,
         };
       });
+      // telas baixas (notebook): reduz a manchete para caber na altura disponível
+      const natural = metrics.reduce((s, m) => s + (m.asc + m.desc) * m.size, 0) * (1 + 0.06 * (lines.length - 1));
+      if (natural > maxHeight) {
+        const k = maxHeight / natural;
+        for (const m of metrics) m.size *= k;
+      }
       const gap = (metrics[0]?.size ?? 0) * 0.06;
       h = Math.ceil(metrics.reduce((s, m) => s + (m.asc + m.desc) * m.size, 0) + gap * (lines.length - 1) + 4);
       box.style.height = `${h}px`;
@@ -70,7 +76,7 @@ export default function HeroMural({ text }: { text: string }) {
         mctx.font = `700 ${m.size}px ${fontFamily}`;
         mctx.letterSpacing = `${-0.04 * m.size}px`;
         const mw = mctx.measureText(m.line).width;
-        const scale = Math.min(1.15, w / (mw || 1));
+        const scale = natural > maxHeight ? 1 : Math.min(1.15, w / (mw || 1));
         y += m.asc * m.size;
         mctx.save();
         mctx.scale(scale, 1);
@@ -175,7 +181,7 @@ export default function HeroMural({ text }: { text: string }) {
       ro.disconnect();
       window.removeEventListener("pointermove", onMove);
     };
-  }, [text]);
+  }, [text, maxHeight]);
 
   return (
     <div ref={wrap} className="relative w-full" aria-label={text} role="img">
