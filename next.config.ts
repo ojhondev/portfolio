@@ -7,7 +7,16 @@ const nextConfig: NextConfig = {
     return [{ source: "/", destination: "/en" }];
   },
   async redirects() {
-    return [{ source: "/en", destination: "/", permanent: true }];
+    return [
+      { source: "/en", destination: "/", permanent: true },
+      // www → domínio principal
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.devjhon.tech" }],
+        destination: "https://devjhon.tech/:path*",
+        permanent: true,
+      },
+    ];
   },
   partialPrefetching: true,
   turbopack: {

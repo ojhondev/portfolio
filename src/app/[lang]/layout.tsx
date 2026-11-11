@@ -18,6 +18,7 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
   if (!isLocale(lang)) return {};
   const { t } = getContent(lang);
   return {
+    metadataBase: new URL("https://devjhon.tech"),
     title: t.metaTitle,
     description: t.metaDescription,
     alternates: {
