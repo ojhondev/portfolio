@@ -163,7 +163,7 @@ const projectDefs: ProjectDef[] = [
 
 const dict = {
   en: {
-    role: "Product developer",
+    role: "Dev",
     tagline: "“Portfolio”",
     headline: "I build things",
     intro: "Systems analyst focused on product. From brand websites to complex software — I take ideas off paper and put them live, from zero to deploy.",
@@ -204,7 +204,7 @@ const dict = {
     metaDescription: "Systems analyst (FATEC) focused on product: from brand websites to complex software, built from zero to live.",
   },
   pt: {
-    role: "Desenvolvedor de produto",
+    role: "Dev",
     tagline: "“Portfólio”",
     headline: "Eu construo coisas",
     intro: "Analista de sistemas com foco em produto. De sites institucionais a softwares complexos — tiro ideias do papel e coloco no ar, do zero ao deploy.",
