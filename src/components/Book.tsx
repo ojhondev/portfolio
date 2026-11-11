@@ -89,7 +89,7 @@ export default function Book({ pageW, pageH }: { pageW: number; pageH: number })
           onClick={() => setFlipped((f) => !f)}
         >
           <div
-            className="absolute inset-0 grid place-items-center rounded-[20px] bg-lavender text-[clamp(80px,12vw,180px)] leading-none tracking-[-0.04em] text-bone"
+            className="absolute inset-0 title grid place-items-center rounded-[20px] bg-lavender text-[clamp(80px,12vw,180px)] leading-none tracking-[-0.04em] text-bone"
             style={{ backfaceVisibility: "hidden" }}
           >
             {t.cover}
@@ -137,7 +137,7 @@ function RightPage() {
           <li key={p.slug} className="grid grid-cols-[52px_1fr] gap-x-3 py-3">
             <span className="font-mono text-[13px] text-fog pt-1">{p.year}</span>
             <div>
-              <div className="text-[19px]">{p.name}</div>
+              <div className="title text-[19px]">{p.name}</div>
               <div className="text-[15px] text-fog">{p.role}</div>
               <div className="mt-1.5 flex flex-wrap gap-1.5">
                 {p.stack.map((s) => (

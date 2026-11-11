@@ -93,7 +93,7 @@ export default function ContactPanel() {
                 <Clock timeZone={person.timeZone} />
               </div>
               <div className="px-5 pb-5">
-                <h3 className="text-[22px] leading-[1.1]">{t.availability}</h3>
+                <h3 className="title text-[22px] leading-[1.1]">{t.availability}</h3>
                 <p className="mt-2 text-[15px] text-fog">{t.availabilityNote}</p>
                 <p className="mt-1 text-[15px] text-fog">
                   {person.city} · {time}

@@ -28,7 +28,7 @@ export default function HeroMural({ text }: { text: string }) {
     const pointer = { x: -9999, y: -9999, active: false, last: 0 };
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const fontFamily = getComputedStyle(document.body).fontFamily;
+    const fontFamily = getComputedStyle(document.documentElement).getPropertyValue("--font-display").trim() || "sans-serif";
 
     function layout() {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -42,7 +42,7 @@ export default function HeroMural({ text }: { text: string }) {
       // mede cada linha para que ocupe a largura toda
       const metrics = lines.map((line) => {
         mctx.font = `700 100px ${fontFamily}`;
-        mctx.letterSpacing = "-2px";
+        mctx.letterSpacing = "-4px";
         const m = mctx.measureText(line);
         const size = (100 * w) / (m.width || 1);
         return {
@@ -68,7 +68,7 @@ export default function HeroMural({ text }: { text: string }) {
       let y = 0;
       for (const m of metrics) {
         mctx.font = `700 ${m.size}px ${fontFamily}`;
-        mctx.letterSpacing = `${-0.02 * m.size}px`;
+        mctx.letterSpacing = `${-0.04 * m.size}px`;
         const mw = mctx.measureText(m.line).width;
         const scale = Math.min(1.15, w / (mw || 1));
         y += m.asc * m.size;
@@ -165,6 +165,7 @@ export default function HeroMural({ text }: { text: string }) {
 
     const ro = new ResizeObserver(() => layout());
     ro.observe(box);
+    document.fonts?.load(`700 100px ${fontFamily}`).then(layout).catch(() => {});
     document.fonts?.ready.then(layout);
     layout();
     raf = requestAnimationFrame(frame);

@@ -205,7 +205,7 @@ function PortfolioView({ work }: { work: WorkItem[] }) {
                   initial={false}
                   animate={{ opacity: hideTabMobile ? 0 : 1, left: mobile && isActive ? 44 : tabX(i), width: mobile && isActive ? baseTabW : tabW() }}
                   transition={SPRING}
-                  className="folder-tab absolute top-0 flex items-center justify-center text-[17px] md:text-[20px]"
+                  className="folder-tab title absolute top-0 flex items-center justify-center text-[16px] md:text-[18px]"
                   style={{
                     height: TAB_H,
                     background: cardColor(i, n),
@@ -352,7 +352,7 @@ function Info({ item, height, mobile }: { item: WorkItem; height: number; mobile
       style={{ width: mobile ? 300 : 380, height }}
     >
       <div>
-        <h2 className="text-[28px] leading-[1.05] md:text-[34px]">{item.name}</h2>
+        <h2 className="title text-[28px] leading-[1.05] md:text-[36px]">{item.name}</h2>
         <h4 className="mt-6 text-[15px] text-fog">{t.scope}</h4>
         <p className="mt-1.5 text-[17px] leading-[1.28] md:text-[18px]">{item.scope}</p>
       </div>
