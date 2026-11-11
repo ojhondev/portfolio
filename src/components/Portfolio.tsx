@@ -68,13 +68,23 @@ export default function Portfolio({ work }: { work: WorkItem[] }) {
   const step = n > 1 ? Math.max(28, (H - top0 - visibleLast) / (n - 1)) : 0;
   const cardH = H - TAB_H - ROW + 1;
   const pad = mobile ? 12 : 64;
-  const tabW = mobile ? Math.min(170, W * 0.44) : Math.max(110, Math.min(170, (W - pad * 2) / n - 6));
+  const baseTabW = mobile ? Math.min(170, W * 0.44) : 210;
+  // aberta: abas viram duas faixas (topo = anteriores + ativa, rodapé = seguintes), empacotadas
+  const topCount = book ? 0 : active === null ? 0 : active + 1;
+  const botCount = book ? n : active === null ? 0 : n - active - 1;
+  const rowMax = Math.max(topCount, botCount, 1);
+  const OVER = 18; // sobreposição entre abas vizinhas, como pastas de arquivo
+  const rowTabW = Math.max(96, Math.min(baseTabW, (W - 56 + OVER * (rowMax - 1)) / rowMax));
+  const tabW = () => (active === null && !book ? baseTabW : rowTabW);
   const tabX = (i: number) => {
-    if (mobile) {
-      const cols = 3;
-      return 8 + ((i % cols) * (W - tabW - 16)) / (cols - 1);
+    if (book || active !== null) {
+      const k = book ? i : i <= (active as number) ? i : i - (active as number) - 1;
+      return 48 + k * (rowTabW - OVER);
     }
-    return pad + (n > 1 ? (i * (W - tabW - pad * 2)) / (n - 1) : 0);
+    if (mobile) {
+      return i % 2 === 0 ? 8 : W - baseTabW - 8;
+    }
+    return pad + (n > 1 ? (i * (W - baseTabW - pad * 2)) / (n - 1) : 0);
   };
 
   const yFor = (i: number) => {
@@ -97,7 +107,7 @@ export default function Portfolio({ work }: { work: WorkItem[] }) {
       {/* cabeçalho + manchete */}
       <motion.header
         ref={headerRef}
-        animate={{ opacity: anyOpen ? 0.35 : 1, filter: anyOpen ? "blur(2px)" : "blur(0px)" }}
+        animate={{ opacity: anyOpen ? 0 : 1, filter: anyOpen ? "blur(6px)" : "blur(0px)" }}
         transition={{ duration: 0.5 }}
         className="relative z-0"
       >
@@ -105,7 +115,7 @@ export default function Portfolio({ work }: { work: WorkItem[] }) {
           <h3>{profile.name}</h3>
           <h3 className="hidden md:block">{profile.role}</h3>
           <h3 className="hidden md:block">{profile.tagline}</h3>
-          <h3 className="text-right md:text-left">
+          <h3 className="hidden md:block">
             <span className="tabular-nums">{clock.label}</span> {profile.city}
           </h3>
         </nav>
@@ -183,18 +193,18 @@ export default function Portfolio({ work }: { work: WorkItem[] }) {
                     setActive((a) => (a === i ? null : i));
                   }}
                   onMouseEnter={() => !anyOpen && setHover(i)}
-                  animate={{ opacity: hideTabMobile ? 0 : 1 }}
-                  className="folder-tab absolute top-0 flex items-center justify-center text-[18px] md:text-[22px]"
+                  initial={false}
+                  animate={{ opacity: hideTabMobile ? 0 : 1, left: mobile && isActive ? 44 : tabX(i), width: mobile && isActive ? baseTabW : tabW() }}
+                  transition={SPRING}
+                  className="folder-tab absolute top-0 flex items-center justify-center text-[17px] md:text-[20px]"
                   style={{
-                    left: mobile && isActive ? 40 : tabX(i),
-                    width: tabW,
                     height: TAB_H,
                     background: cardColor(i, n),
                     pointerEvents: hideTabMobile ? "none" : "auto",
                     color: isActive ? "var(--color-bone)" : collapsedTop ? "var(--color-fog)" : "var(--color-bone)",
                   }}
                 >
-                  <span className="truncate px-5">{p.name}</span>
+                  <span className="truncate px-[12%]">{p.name}</span>
                 </motion.button>
                 {/* corpo da pasta */}
                 <div
@@ -267,6 +277,36 @@ function Gallery({ item, open, height, mobile }: { item: WorkItem; open: boolean
         </div>
       );
     });
+
+  if (mobile) {
+    // celular: prints de desktop empilhados em colunas, prints de celular em altura cheia
+    const vw = typeof window !== "undefined" ? window.innerWidth : 390;
+    const dw = vw - 56;
+    const dh = Math.round((dw * 900) / 1440);
+    const per = Math.max(1, Math.floor((imgH + 10) / (dh + 10)));
+    const desk = item.images.filter((s) => s.w > s.h);
+    const mob = item.images.filter((s) => s.w <= s.h);
+    const cols: Shot[][] = [];
+    for (let i = 0; i < desk.length; i += per) cols.push(desk.slice(i, i + per));
+    const tile = (s: Shot, w: number, h: number, k: number) => (
+      <div key={s.src} className="relative shrink-0 overflow-hidden rounded-[12px] bg-black/20" style={{ width: w, height: h }}>
+        <Image src={s.src} alt={`${item.name} — tela ${k + 1}`} fill sizes={`${w}px`} className="object-cover object-top" draggable={false} />
+      </div>
+    );
+    return (
+      <div ref={ref} className={`gallery-scroll flex h-full gap-2.5 p-3 ${open ? "overflow-x-auto" : "overflow-hidden"}`}>
+        {cols[0] && <div className="flex shrink-0 flex-col gap-2.5">{cols[0].map((s, k) => tile(s, dw, dh, k))}</div>}
+        <Info item={item} height={imgH} mobile />
+        {cols.slice(1).map((c, ci) => (
+          <div key={ci} className="flex shrink-0 flex-col gap-2.5">
+            {c.map((s, k) => tile(s, dw, dh, k))}
+          </div>
+        ))}
+        {mob.map((s, k) => tile(s, Math.round((imgH * s.w) / s.h), imgH, k))}
+        <div className="shrink-0" style={{ width: 4 }} />
+      </div>
+    );
+  }
 
   return (
     <div

@@ -33,13 +33,27 @@ export default function HeroMural({ text }: { text: string }) {
     function layout() {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       w = box.clientWidth;
-      // mede a fonte para que o texto ocupe a largura toda
-      mctx.font = `400 100px ${fontFamily}`;
-      const m = mctx.measureText(text);
-      const size = (100 * w) / (m.width || 1);
-      const asc = m.actualBoundingBoxAscent * (size / 100);
-      const desc = m.actualBoundingBoxDescent * (size / 100);
-      h = Math.ceil(asc + desc + size * 0.04);
+      // telas estreitas: quebra a manchete em duas linhas
+      const words = text.split(" ");
+      const lines =
+        w < 640 && words.length > 1
+          ? [words.slice(0, Math.ceil(words.length / 2)).join(" "), words.slice(Math.ceil(words.length / 2)).join(" ")]
+          : [text];
+      // mede cada linha para que ocupe a largura toda
+      const metrics = lines.map((line) => {
+        mctx.font = `400 100px ${fontFamily}`;
+        mctx.letterSpacing = "-3px";
+        const m = mctx.measureText(line);
+        const size = (100 * w) / (m.width || 1);
+        return {
+          line,
+          size: Math.min(size, lines.length > 1 ? w * 0.36 : size),
+          asc: m.actualBoundingBoxAscent / 100,
+          desc: m.actualBoundingBoxDescent / 100,
+        };
+      });
+      const gap = (metrics[0]?.size ?? 0) * 0.06;
+      h = Math.ceil(metrics.reduce((s, m) => s + (m.asc + m.desc) * m.size, 0) + gap * (lines.length - 1) + 4);
       box.style.height = `${h}px`;
       for (const c of [el, mask]) {
         c.width = Math.round(w * dpr);
@@ -50,15 +64,20 @@ export default function HeroMural({ text }: { text: string }) {
       mctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       mctx.clearRect(0, 0, w, h);
       mctx.fillStyle = "#fff";
-      mctx.font = `400 ${size}px ${fontFamily}`;
-      mctx.letterSpacing = `${-0.03 * size}px`;
-      const m2 = mctx.measureText(text);
-      const scale = w / (m2.width || 1);
-      mctx.save();
-      mctx.scale(scale, 1);
       mctx.textBaseline = "alphabetic";
-      mctx.fillText(text, 0, asc + size * 0.02);
-      mctx.restore();
+      let y = 0;
+      for (const m of metrics) {
+        mctx.font = `400 ${m.size}px ${fontFamily}`;
+        mctx.letterSpacing = `${-0.03 * m.size}px`;
+        const mw = mctx.measureText(m.line).width;
+        const scale = Math.min(1.15, w / (mw || 1));
+        y += m.asc * m.size;
+        mctx.save();
+        mctx.scale(scale, 1);
+        mctx.fillText(m.line, 0, y + 1);
+        mctx.restore();
+        y += m.desc * m.size + gap;
+      }
       seed();
     }
 

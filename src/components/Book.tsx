@@ -108,7 +108,7 @@ function RightPage() {
     <div className="book-scroll h-full overflow-y-auto px-6 pt-10 pb-8 md:px-8">
       <div className="relative">
         <p className="text-[18px] text-fog">Oi, eu sou o {profile.firstName}</p>
-        <div aria-hidden className="pointer-events-none font-signature -mt-2 text-[clamp(72px,9vw,120px)] leading-[0.9] text-lavender">
+        <div aria-hidden className="pointer-events-none font-signature mt-3 text-[clamp(72px,9vw,120px)] leading-[1] text-lavender">
           {profile.firstName}
         </div>
       </div>

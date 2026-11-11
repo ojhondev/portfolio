@@ -16,9 +16,12 @@ export function useViewport() {
 export function useClock(timeZone: string) {
   const [now, setNow] = useState<Date | null>(null);
   useEffect(() => {
-    setNow(new Date());
+    const first = setTimeout(() => setNow(new Date()), 0);
     const id = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(id);
+    return () => {
+      clearTimeout(first);
+      clearInterval(id);
+    };
   }, []);
   if (!now) return { label: "--:--", h: 0, m: 0, s: 0 };
   const parts = new Intl.DateTimeFormat("pt-BR", {

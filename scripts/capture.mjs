@@ -31,7 +31,55 @@ async function warm(page) {
   await sleep(900);
 }
 
+// fecha pop-ups, modais e banners de cookie antes de cada print
+async function clean(page) {
+  const labels = /^\s*(recusar|rejeitar|agora não|agora nao|não, obrigado|fechar|entendi|aceitar|aceito|ok|×|✕)\s*$/i;
+  try {
+    const buttons = page.locator("button, [role=button], a");
+    const count = Math.min(await buttons.count(), 400);
+    for (let i = 0; i < count; i++) {
+      const b = buttons.nth(i);
+      const t = (await b.innerText({ timeout: 200 }).catch(() => "")) || (await b.getAttribute("aria-label").catch(() => "")) || "";
+      if (labels.test(t) && (await b.isVisible().catch(() => false))) {
+        const inOverlay = await b.evaluate((el) => {
+          let n = el;
+          while (n && n !== document.body) {
+            const cs = getComputedStyle(n);
+            if (cs.position === "fixed" || n.getAttribute("role") === "dialog" || n.getAttribute("aria-modal") === "true") return true;
+            n = n.parentElement;
+          }
+          return false;
+        });
+        if (inOverlay) await b.click({ timeout: 800 }).catch(() => {});
+      }
+    }
+  } catch {}
+  await page.evaluate(() => {
+    const vw = innerWidth;
+    const vh = innerHeight;
+    for (const el of document.querySelectorAll("body *")) {
+      const cs = getComputedStyle(el);
+      if (cs.position !== "fixed" && cs.position !== "sticky") {
+        if (el.getAttribute("role") === "dialog" || el.getAttribute("aria-modal") === "true") el.remove();
+        continue;
+      }
+      const r = el.getBoundingClientRect();
+      const txt = (el.innerText || "").toLowerCase();
+      const isCookie = /cookie|lgpd|política de privacidade/.test(txt) && r.height < vh * 0.5;
+      const isModal = el.getAttribute("role") === "dialog" || el.getAttribute("aria-modal") === "true";
+      const full = r.width >= vw * 0.95 && r.height >= vh * 0.95;
+      const alpha = Number((cs.backgroundColor.match(/rgba?\([^)]*,\s*([\d.]+)\)/) || [])[1] ?? 1);
+      const isBackdrop = full && (el.querySelector("form, input, textarea, select") || (alpha > 0.05 && alpha < 0.95));
+      if (isCookie || isModal || isBackdrop) el.remove();
+    }
+    document.documentElement.style.overflow = "";
+    document.body.style.overflow = "";
+  });
+  await sleep(300);
+}
+
 async function shoot(page, file) {
+  await clean(page);
   await page.screenshot({ path: file, type: "jpeg", quality: 82 });
   console.log("  ✓", path.relative(process.cwd(), file));
 }
@@ -78,7 +126,7 @@ for (const p of PROJECTS) {
   try {
     const desk = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1, locale: "pt-BR" });
     const page = await desk.newPage();
-    await page.goto(p.url, { waitUntil: "networkidle", timeout: 60000 });
+    await page.goto(p.url, { waitUntil: "load", timeout: 90000 });
     await sleep(2500);
     await warm(page);
     await sections(page, dir, "desk", 4);
@@ -87,7 +135,7 @@ for (const p of PROJECTS) {
     for (const link of inner) {
       i++;
       try {
-        await page.goto(link, { waitUntil: "networkidle", timeout: 45000 });
+        await page.goto(link, { waitUntil: "load", timeout: 60000 });
         await sleep(2000);
         await warm(page);
         await shoot(page, path.join(dir, `page-${i}.jpg`));
@@ -105,7 +153,7 @@ for (const p of PROJECTS) {
       locale: "pt-BR",
     });
     const mp = await mob.newPage();
-    await mp.goto(p.url, { waitUntil: "networkidle", timeout: 60000 });
+    await mp.goto(p.url, { waitUntil: "load", timeout: 90000 });
     await sleep(2500);
     await warm(mp);
     await sections(mp, dir, "mob", 2);
