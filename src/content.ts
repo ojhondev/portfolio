@@ -18,6 +18,7 @@ const person = {
   name: "Jhonatan Ribeiro",
   firstName: "Jhonatan",
   initials: "JR",
+  handle: "JhonDev",
   city: "São Paulo",
   timeZone: "America/Sao_Paulo",
   available: true,
@@ -158,22 +159,6 @@ const projectDefs: ProjectDef[] = [
       { label: L.github, href: "https://github.com/ojhondev/galeriasacra" },
     ],
   },
-  {
-    slug: "ominia",
-    name: "Ominia",
-    year: "2026",
-    role: ROLE_FULL,
-    scope: {
-      en: "ESG risk SaaS for agribusiness: cross-references social and environmental data to assess producers and land. A dark, data-first interface available in English, Portuguese, Spanish and Chinese.",
-      pt: "SaaS de risco ESG para o agronegócio: cruza dados socioambientais para avaliar produtores e áreas. Interface escura orientada a dados, disponível em português, inglês, espanhol e chinês.",
-    },
-    stack: ["Next.js", "Neon", "Drizzle", "i18n"],
-    shots: ["ominia"],
-    links: [
-      { label: L.site, href: "https://ominia.vercel.app" },
-      { label: L.github, href: "https://github.com/ojhondev/ominia" },
-    ],
-  },
 ];
 
 const dict = {
@@ -186,7 +171,7 @@ const dict = {
     selectedWork: "Selected work ↓",
     bio: [
       "I’m a product developer. I love taking a raw idea and turning it into something people actually use — with its own character, fast, and live.",
-      "Over the last months I’ve built animated brand websites, e-commerce stores with admin dashboards, data platforms and full SaaS products for agribusiness, data privacy, architecture, retail and car dealerships.",
+      "Over the last months I’ve built animated brand websites, e-commerce stores with admin dashboards, and full SaaS products for data privacy, architecture, retail and car dealerships.",
       "I work with Next.js, React, Tailwind, Postgres (Neon) and Vercel, and I use AI as a force multiplier: the time it saves goes into what matters — product, detail and business.",
       "If you have a project and need someone to own it end to end, let’s talk.",
     ],
@@ -226,7 +211,7 @@ const dict = {
     selectedWork: "Projetos selecionados ↓",
     bio: [
       "Sou desenvolvedor de produto. Gosto de pegar uma ideia ainda crua e transformar em algo que as pessoas usam de verdade — com cara própria, rápido e no ar.",
-      "Nos últimos meses construí sites institucionais animados, e-commerces com painel administrativo, plataformas de dados e SaaS completos para agro, LGPD, arquitetura, varejo e concessionárias.",
+      "Nos últimos meses construí sites institucionais animados, e-commerces com painel administrativo, e SaaS completos para LGPD, arquitetura, varejo e concessionárias.",
       "Trabalho com Next.js, React, Tailwind, Postgres (Neon) e Vercel, e uso IA como multiplicador de força: o tempo que sobra vai para o que importa — produto, detalhe e negócio.",
       "Se você tem um projeto e precisa de alguém que resolva de ponta a ponta, vamos conversar.",
     ],

@@ -1,34 +1,17 @@
 "use client";
 
 import { motion } from "motion/react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useContent } from "./ContentContext";
 import { primaryContact } from "./ContactPanel";
 
-const DOT_COLORS = ["#aca0fc", "#dcf34a", "#ff5a1f", "#3fb6ff", "#ff7ac8", "#2ec27e", "#ffd23f"];
-
-function DotWall() {
+/** Página esquerda do livro: foto com moldura da cor da página. */
+function Photo({ className = "" }: { className?: string }) {
   const { person } = useContent();
-  // padrão de pontos determinístico (sem Math.random para não variar no SSR)
-  const cols = 9;
-  const rows = 12;
   return (
-    <div className="absolute inset-0 overflow-hidden bg-[#f4f1ea]">
-      <div className="grid h-full w-full" style={{ gridTemplateColumns: `repeat(${cols},1fr)`, gridTemplateRows: `repeat(${rows},1fr)` }}>
-        {Array.from({ length: cols * rows }).map((_, i) => (
-          <div key={i} className="grid place-items-center">
-            <span
-              className="block aspect-square w-[58%] rounded-full"
-              style={{ background: DOT_COLORS[(i * 5 + Math.floor(i / cols) * 3) % DOT_COLORS.length] }}
-            />
-          </div>
-        ))}
-      </div>
-      <div className="absolute inset-x-0 bottom-0 top-[38%] grid place-items-center">
-        <div className="grid aspect-square w-[62%] place-items-center rounded-full bg-[#151a1a] text-[clamp(56px,9vw,120px)] leading-none tracking-[-0.04em] text-bone">
-          {person.initials}
-        </div>
-      </div>
+    <div className={`relative overflow-hidden rounded-[12px] bg-[#a9adb8] ${className}`}>
+      <Image src="/me.webp" alt={person.name} fill sizes="(max-width: 768px) 90vw, 520px" className="object-cover object-[50%_30%]" priority />
     </div>
   );
 }
@@ -54,7 +37,7 @@ export default function Book({ pageW, pageH }: { pageW: number; pageH: number })
         className="relative overflow-hidden rounded-[20px] bg-card-3"
         style={{ width: pageW, height: pageH }}
       >
-        <RightPage />
+        <RightPage withPhoto />
       </motion.div>
     );
   }
@@ -95,10 +78,10 @@ export default function Book({ pageW, pageH }: { pageW: number; pageH: number })
             {t.cover}
           </div>
           <div
-            className="absolute inset-0 overflow-hidden rounded-[20px] border-[6px] border-card-3"
+            className="absolute inset-0 overflow-hidden rounded-[20px] bg-card-3 p-4"
             style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
           >
-            <DotWall />
+            <Photo className="h-full w-full" />
           </div>
         </motion.div>
       </motion.div>
@@ -106,15 +89,16 @@ export default function Book({ pageW, pageH }: { pageW: number; pageH: number })
   );
 }
 
-function RightPage() {
+function RightPage({ withPhoto = false }: { withPhoto?: boolean }) {
   const { person, t, projects } = useContent();
   const cta = primaryContact(t);
   return (
     <div className="book-scroll h-full overflow-y-auto px-6 pt-10 pb-8 md:px-8">
+      {withPhoto && <Photo className="-mt-4 mb-6 aspect-[4/3] w-full" />}
       <div className="relative">
         <p className="text-[18px] text-fog">{t.hi} {person.firstName}</p>
-        <div aria-hidden className="pointer-events-none font-signature mt-3 text-[clamp(72px,9vw,120px)] leading-[1] text-lavender">
-          {person.firstName}
+        <div aria-hidden className="pointer-events-none mt-2 font-plex text-[clamp(52px,6.5vw,88px)] leading-[1] font-medium tracking-[-0.04em] text-lavender">
+          {person.handle}
         </div>
       </div>
       <div className="mt-4 space-y-4 text-[19px] leading-[1.25]">

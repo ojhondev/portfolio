@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist_Mono, Mrs_Saint_Delafield, Space_Grotesk } from "next/font/google";
+import { Geist_Mono, IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
 import { notFound } from "next/navigation";
 import { getContent, isLocale, localePath, locales } from "@/content";
 import "../globals.css";
@@ -7,7 +7,7 @@ import "../globals.css";
 // Space Grotesk: Regular no texto, Bold nos títulos.
 const display = Space_Grotesk({ variable: "--font-display", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
-const signature = Mrs_Saint_Delafield({ variable: "--font-signature", subsets: ["latin"], weight: "400" });
+const plex = IBM_Plex_Mono({ variable: "--font-plex", subsets: ["latin"], weight: ["400", "500"] });
 
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
@@ -35,7 +35,7 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   return (
-    <html lang={lang === "pt" ? "pt-BR" : "en"} className={`${display.variable} ${geistMono.variable} ${signature.variable} h-full`}>
+    <html lang={lang === "pt" ? "pt-BR" : "en"} className={`${display.variable} ${geistMono.variable} ${plex.variable} h-full`}>
       <body className="h-full">{children}</body>
     </html>
   );

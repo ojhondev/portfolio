@@ -10,7 +10,7 @@
   --color-lavender: #aca0fc;
   --font-sans: var(--font-display);
   --font-mono: var(--font-geist-mono);
-  --font-signature: var(--font-signature);
+  --font-plex: var(--font-plex);
 }
 
 :root {

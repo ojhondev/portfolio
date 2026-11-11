@@ -13,7 +13,6 @@ const PROJECTS = [
   { slug: "temaranger", url: "https://temaranger.vercel.app" },
   { slug: "mobiletto", url: "https://mobiletto.vercel.app" },
   { slug: "galeriasacra", url: "https://galeriasacra.vercel.app" },
-  { slug: "ominia", url: "https://ominia.vercel.app" },
 ];
 
 const only = process.argv.slice(2);
