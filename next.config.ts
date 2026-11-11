@@ -1,8 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
+  // inglês é o idioma principal: "/" serve a versão /en
+  async rewrites() {
+    return [{ source: "/", destination: "/en" }];
+  },
+  async redirects() {
+    return [{ source: "/en", destination: "/", permanent: true }];
+  },
   partialPrefetching: true,
   turbopack: {
     rules: {

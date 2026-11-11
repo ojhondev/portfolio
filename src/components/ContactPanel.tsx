@@ -2,11 +2,13 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
-import { contact, profile } from "@/content";
+import { contact } from "@/content";
+import { useContent } from "./ContentContext";
+import LanguageSwitch from "./LanguageSwitch";
 import { useClock } from "./useViewport";
 
-function Clock() {
-  const { h, m, s } = useClock(profile.timeZone);
+function Clock({ timeZone }: { timeZone: string }) {
+  const { h, m, s } = useClock(timeZone);
   const hr = ((h % 12) + m / 60) * 30;
   const mn = (m + s / 60) * 6;
   const sc = s * 6;
@@ -40,19 +42,29 @@ function Clock() {
   );
 }
 
+export function primaryContact(t: ReturnType<typeof useContent>["t"]) {
+  if (contact.whatsapp) return { label: t.ctaWhatsapp, href: `https://wa.me/${contact.whatsapp}` };
+  if (contact.email) return { label: t.ctaEmail, href: `mailto:${contact.email}` };
+  return { label: t.ctaGithub, href: contact.github };
+}
+
 export default function ContactPanel() {
+  const { person, t } = useContent();
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const wa = contact.whatsapp ? `https://wa.me/${contact.whatsapp}` : "";
-  const primary = wa
-    ? { label: "Falar no WhatsApp", href: wa }
-    : contact.email
-      ? { label: "Mandar um e-mail", href: `mailto:${contact.email}` }
-      : { label: "Ver meu GitHub", href: contact.github };
+  const { label: time } = useClock(person.timeZone);
+  const primary = primaryContact(t);
 
   return (
-    <div className="fixed top-2.5 right-2.5 z-50">
+    <div className="fixed top-2.5 right-2.5 z-50 flex items-start gap-1.5">
       <AnimatePresence initial={false}>
+        {!open && (
+          <motion.div key="lang" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }}>
+            <LanguageSwitch />
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <AnimatePresence initial={false} mode="popLayout">
         {open ? (
           <motion.div
             key="panel"
@@ -66,25 +78,25 @@ export default function ContactPanel() {
             <div className="rounded-[20px] bg-white/[0.04]">
               <div className="flex items-center justify-between px-3 pt-3">
                 <span className="flex items-center gap-2 rounded-full bg-white/[0.06] py-1 pr-3 pl-3 text-[15px]">
-                  {profile.available ? "Disponível" : "Ocupado"}
-                  <span className={`size-3 rounded-full ${profile.available ? "bg-lavender" : "bg-ash"}`} />
+                  {person.available ? t.available : t.busy}
+                  <span className={`size-3 rounded-full ${person.available ? "bg-lavender" : "bg-ash"}`} />
                 </span>
                 <button
                   onClick={() => setOpen(false)}
-                  aria-label="Fechar contato"
+                  aria-label={t.closeContact}
                   className="grid size-9 place-items-center rounded-full text-fog transition hover:bg-white/10 hover:text-bone"
                 >
                   <svg width="14" height="14" viewBox="0 0 14 14"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="1.6" /></svg>
                 </button>
               </div>
               <div className="px-5 py-4">
-                <Clock />
+                <Clock timeZone={person.timeZone} />
               </div>
               <div className="px-5 pb-5">
-                <h3 className="text-[22px] leading-[1.1]">{profile.availability}</h3>
-                <p className="mt-2 text-[15px] text-fog">{profile.availabilityNote}</p>
+                <h3 className="text-[22px] leading-[1.1]">{t.availability}</h3>
+                <p className="mt-2 text-[15px] text-fog">{t.availabilityNote}</p>
                 <p className="mt-1 text-[15px] text-fog">
-                  {profile.city} · <LiveTime />
+                  {person.city} · {time}
                 </p>
               </div>
             </div>
@@ -107,7 +119,7 @@ export default function ContactPanel() {
                   }}
                   className="text-[15px] text-fog hover:text-bone"
                 >
-                  {copied ? "Copiado" : "Copiar"}
+                  {copied ? t.copied : t.copy}
                 </button>
               </div>
             )}
@@ -129,7 +141,7 @@ export default function ContactPanel() {
             onClick={() => setOpen(true)}
             className="group flex h-10 items-center gap-2 rounded-full bg-[rgba(48,54,54,0.82)] pr-3 pl-4 text-[17px] backdrop-blur-xl transition hover:bg-[rgba(70,78,78,0.9)]"
           >
-            Contato
+            {t.contact}
             <svg width="16" height="16" viewBox="0 0 16 16" className="transition-transform duration-300 group-hover:rotate-90">
               <path d="M8 1v14M1 8h14" stroke="currentColor" strokeWidth="1.6" />
             </svg>
@@ -138,9 +150,4 @@ export default function ContactPanel() {
       </AnimatePresence>
     </div>
   );
-}
-
-function LiveTime() {
-  const { label } = useClock(profile.timeZone);
-  return <>{label}</>;
 }

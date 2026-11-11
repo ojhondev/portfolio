@@ -2,11 +2,13 @@
 
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
-import { contact, profile, projects } from "@/content";
+import { useContent } from "./ContentContext";
+import { primaryContact } from "./ContactPanel";
 
 const DOT_COLORS = ["#aca0fc", "#dcf34a", "#ff5a1f", "#3fb6ff", "#ff7ac8", "#2ec27e", "#ffd23f"];
 
 function DotWall() {
+  const { person } = useContent();
   // padrão de pontos determinístico (sem Math.random para não variar no SSR)
   const cols = 9;
   const rows = 12;
@@ -24,7 +26,7 @@ function DotWall() {
       </div>
       <div className="absolute inset-x-0 bottom-0 top-[38%] grid place-items-center">
         <div className="grid aspect-square w-[62%] place-items-center rounded-full bg-[#151a1a] text-[clamp(56px,9vw,120px)] leading-none tracking-[-0.04em] text-bone">
-          {profile.initials}
+          {person.initials}
         </div>
       </div>
     </div>
@@ -32,6 +34,7 @@ function DotWall() {
 }
 
 export default function Book({ pageW, pageH }: { pageW: number; pageH: number }) {
+  const { t } = useContent();
   const [flipped, setFlipped] = useState(false);
   const single = pageW * 2 > (typeof window !== "undefined" ? window.innerWidth - 24 : 9999);
 
@@ -89,7 +92,7 @@ export default function Book({ pageW, pageH }: { pageW: number; pageH: number })
             className="absolute inset-0 grid place-items-center rounded-[20px] bg-lavender text-[clamp(80px,12vw,180px)] leading-none tracking-[-0.04em] text-bone"
             style={{ backfaceVisibility: "hidden" }}
           >
-            Oi
+            {t.cover}
           </div>
           <div
             className="absolute inset-0 overflow-hidden rounded-[20px] border-[6px] border-card-3"
@@ -104,29 +107,31 @@ export default function Book({ pageW, pageH }: { pageW: number; pageH: number })
 }
 
 function RightPage() {
+  const { person, t, projects } = useContent();
+  const cta = primaryContact(t);
   return (
     <div className="book-scroll h-full overflow-y-auto px-6 pt-10 pb-8 md:px-8">
       <div className="relative">
-        <p className="text-[18px] text-fog">Oi, eu sou o {profile.firstName}</p>
+        <p className="text-[18px] text-fog">{t.hi} {person.firstName}</p>
         <div aria-hidden className="pointer-events-none font-signature mt-3 text-[clamp(72px,9vw,120px)] leading-[1] text-lavender">
-          {profile.firstName}
+          {person.firstName}
         </div>
       </div>
       <div className="mt-4 space-y-4 text-[19px] leading-[1.25]">
-        {profile.bio.map((p, i) => (
+        {t.bio.map((p, i) => (
           <p key={i}>{p}</p>
         ))}
       </div>
       <a
-        href={contact.whatsapp ? `https://wa.me/${contact.whatsapp}` : contact.email ? `mailto:${contact.email}` : contact.github}
+        href={cta.href}
         target="_blank"
         rel="noreferrer"
         className="mt-6 flex h-[54px] items-center justify-between rounded-[36px] bg-lavender px-5 text-[17px] text-ink transition hover:brightness-105"
       >
-        Vamos conversar <span aria-hidden>→</span>
+        {t.letsTalk} <span aria-hidden>→</span>
       </a>
 
-      <h4 className="mt-10 text-[15px] text-fog">Projetos</h4>
+      <h4 className="mt-10 text-[15px] text-fog">{t.projects}</h4>
       <ul className="mt-3 divide-y divide-white/[0.07] border-t border-white/[0.07]">
         {projects.map((p) => (
           <li key={p.slug} className="grid grid-cols-[52px_1fr] gap-x-3 py-3">
@@ -145,9 +150,9 @@ function RightPage() {
           </li>
         ))}
       </ul>
-      <h4 className="mt-10 text-[15px] text-fog">Stack</h4>
+      <h4 className="mt-10 text-[15px] text-fog">{t.stack}</h4>
       <p className="mt-2 text-[17px] leading-[1.3]">
-        Next.js · React · TypeScript · Tailwind · shadcn/ui · GSAP · Motion · Postgres (Neon) · Drizzle · Vercel · IA aplicada
+        Next.js · React · TypeScript · Tailwind · shadcn/ui · GSAP · Motion · Postgres (Neon) · Drizzle · Vercel · AI
       </p>
     </div>
   );

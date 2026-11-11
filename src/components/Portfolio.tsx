@@ -3,8 +3,8 @@
 import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import type { Project } from "@/content";
-import { profile } from "@/content";
+import type { Content, Project } from "@/content";
+import { ContentProvider, useContent } from "./ContentContext";
 import Book from "./Book";
 import ContactPanel from "./ContactPanel";
 import HeroMural from "./HeroMural";
@@ -24,9 +24,18 @@ function cardColor(i: number, n: number) {
   return `color(srgb ${l.toFixed(4)} ${(l * 1.105).toFixed(4)} ${(l * 1.105).toFixed(4)})`;
 }
 
-export default function Portfolio({ work }: { work: WorkItem[] }) {
+export default function Portfolio({ work, content }: { work: WorkItem[]; content: Content }) {
+  return (
+    <ContentProvider value={content}>
+      <PortfolioView work={work} />
+    </ContentProvider>
+  );
+}
+
+function PortfolioView({ work }: { work: WorkItem[] }) {
+  const { person, t } = useContent();
   const vp = useViewport();
-  const clock = useClock(profile.timeZone);
+  const clock = useClock(person.timeZone);
   const [active, setActive] = useState<number | null>(null);
   const [hover, setHover] = useState<number | null>(null);
   const [book, setBook] = useState(false);
@@ -111,23 +120,23 @@ export default function Portfolio({ work }: { work: WorkItem[] }) {
         transition={{ duration: 0.5 }}
         className="relative z-0"
       >
-        <nav className="grid grid-cols-2 gap-1 px-3 pt-4 pb-3 text-[15px] md:grid-cols-4 md:text-[18px]">
-          <h3>{profile.name}</h3>
-          <h3 className="hidden md:block">{profile.role}</h3>
-          <h3 className="hidden md:block">{profile.tagline}</h3>
+        <nav className="grid grid-cols-2 gap-1 px-3 pt-4 pb-3 text-[15px] md:grid-cols-4 md:pr-[260px] md:text-[18px]">
+          <h3>{person.name}</h3>
+          <h3 className="hidden md:block">{t.role}</h3>
+          <h3 className="hidden md:block">{t.tagline}</h3>
           <h3 className="hidden md:block">
-            <span className="tabular-nums">{clock.label}</span> {profile.city}
+            <span className="tabular-nums">{clock.label}</span> {person.city}
           </h3>
         </nav>
         <div className="px-3 pt-1">
-          <HeroMural text={profile.headline} />
+          <HeroMural text={t.headline} />
         </div>
         <div className="grid grid-cols-1 gap-1 px-3 pt-4 pb-5 text-[15px] md:grid-cols-4 md:text-[18px]">
-          <h3 className="hidden md:block">Projetos selecionados ↓</h3>
+          <h3 className="hidden md:block">{t.selectedWork}</h3>
           <p className="max-w-[560px] leading-[1.25] md:col-span-2">
-            {profile.intro}{" "}
+            {t.intro}{" "}
             <button onClick={() => setBook(true)} className="text-lavender underline-offset-4 hover:underline">
-              Saiba mais
+              {t.learnMore}
             </button>
           </p>
         </div>
@@ -143,7 +152,7 @@ export default function Portfolio({ work }: { work: WorkItem[] }) {
             exit={{ scale: 0, rotate: 90 }}
             transition={{ type: "spring", stiffness: 400, damping: 26 }}
             onClick={close}
-            aria-label="Fechar"
+            aria-label={t.close}
             className="fixed top-1.5 left-2 z-[60] grid size-8 place-items-center rounded-full bg-lavender text-ink"
           >
             <svg width="12" height="12" viewBox="0 0 12 12"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" strokeWidth="1.8" /></svg>
@@ -246,6 +255,7 @@ export default function Portfolio({ work }: { work: WorkItem[] }) {
 }
 
 function Gallery({ item, open, height, mobile }: { item: WorkItem; open: boolean; height: number; mobile: boolean }) {
+  const { t } = useContent();
   const ref = useRef<HTMLDivElement>(null);
   const drag = useRef<{ x: number; left: number; moved: boolean } | null>(null);
   const imgH = Math.max(160, height - (mobile ? 24 : 40));
@@ -273,7 +283,7 @@ function Gallery({ item, open, height, mobile }: { item: WorkItem; open: boolean
       const w = Math.round((imgH * s.w) / s.h);
       return (
         <div key={s.src} className="relative shrink-0 overflow-hidden rounded-[14px] bg-black/20" style={{ width: w, height: imgH }}>
-          <Image src={s.src} alt={`${item.name} — tela ${k + 1}`} fill sizes={`${w}px`} className="object-cover object-top" draggable={false} />
+          <Image src={s.src} alt={`${item.name} — ${t.screen} ${k + 1}`} fill sizes={`${w}px`} className="object-cover object-top" draggable={false} />
         </div>
       );
     });
@@ -290,7 +300,7 @@ function Gallery({ item, open, height, mobile }: { item: WorkItem; open: boolean
     for (let i = 0; i < desk.length; i += per) cols.push(desk.slice(i, i + per));
     const tile = (s: Shot, w: number, h: number, k: number) => (
       <div key={s.src} className="relative shrink-0 overflow-hidden rounded-[12px] bg-black/20" style={{ width: w, height: h }}>
-        <Image src={s.src} alt={`${item.name} — tela ${k + 1}`} fill sizes={`${w}px`} className="object-cover object-top" draggable={false} />
+        <Image src={s.src} alt={`${item.name} — ${t.screen} ${k + 1}`} fill sizes={`${w}px`} className="object-cover object-top" draggable={false} />
       </div>
     );
     return (
@@ -335,6 +345,7 @@ function Gallery({ item, open, height, mobile }: { item: WorkItem; open: boolean
 }
 
 function Info({ item, height, mobile }: { item: WorkItem; height: number; mobile: boolean }) {
+  const { t } = useContent();
   return (
     <article
       className="flex shrink-0 flex-col justify-between overflow-y-auto rounded-[14px] bg-white/[0.045] p-5 md:p-6"
@@ -342,15 +353,15 @@ function Info({ item, height, mobile }: { item: WorkItem; height: number; mobile
     >
       <div>
         <h2 className="text-[28px] leading-[1.05] md:text-[34px]">{item.name}</h2>
-        <h4 className="mt-6 text-[15px] text-fog">Escopo</h4>
+        <h4 className="mt-6 text-[15px] text-fog">{t.scope}</h4>
         <p className="mt-1.5 text-[17px] leading-[1.28] md:text-[18px]">{item.scope}</p>
       </div>
       <dl className="mt-6 grid grid-cols-[88px_1fr] gap-y-2.5 border-t border-white/[0.08] pt-4 text-[15px]">
-        <dt className="text-fog">Função</dt>
+        <dt className="text-fog">{t.roleLabel}</dt>
         <dd>{item.role}</dd>
-        <dt className="text-fog">Ano</dt>
+        <dt className="text-fog">{t.year}</dt>
         <dd className="font-mono text-[14px]">{item.year}</dd>
-        <dt className="text-fog">Stack</dt>
+        <dt className="text-fog">{t.stack}</dt>
         <dd className="flex flex-wrap gap-1.5">
           {item.stack.map((s) => (
             <span key={s} className="rounded-full border border-white/15 px-2.5 py-0.5 font-mono text-[11px] text-fog">
@@ -358,7 +369,7 @@ function Info({ item, height, mobile }: { item: WorkItem; height: number; mobile
             </span>
           ))}
         </dd>
-        <dt className="text-fog">Links</dt>
+        <dt className="text-fog">{t.links}</dt>
         <dd className="flex flex-wrap gap-x-4 gap-y-1">
           {item.links.map((l) => (
             <a key={l.href} href={l.href} target="_blank" rel="noreferrer" className="underline decoration-white/30 underline-offset-4 hover:decoration-white" onClick={(e) => e.stopPropagation()}>

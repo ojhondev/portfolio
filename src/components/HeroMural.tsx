@@ -41,8 +41,8 @@ export default function HeroMural({ text }: { text: string }) {
           : [text];
       // mede cada linha para que ocupe a largura toda
       const metrics = lines.map((line) => {
-        mctx.font = `400 100px ${fontFamily}`;
-        mctx.letterSpacing = "-3px";
+        mctx.font = `700 100px ${fontFamily}`;
+        mctx.letterSpacing = "-2px";
         const m = mctx.measureText(line);
         const size = (100 * w) / (m.width || 1);
         return {
@@ -67,8 +67,8 @@ export default function HeroMural({ text }: { text: string }) {
       mctx.textBaseline = "alphabetic";
       let y = 0;
       for (const m of metrics) {
-        mctx.font = `400 ${m.size}px ${fontFamily}`;
-        mctx.letterSpacing = `${-0.03 * m.size}px`;
+        mctx.font = `700 ${m.size}px ${fontFamily}`;
+        mctx.letterSpacing = `${-0.02 * m.size}px`;
         const mw = mctx.measureText(m.line).width;
         const scale = Math.min(1.15, w / (mw || 1));
         y += m.asc * m.size;
