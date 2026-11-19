@@ -59,7 +59,7 @@ const projectDefs: ProjectDef[] = [
     stack: ["Next.js", "Tailwind", "GSAP"],
     shots: ["estudiorestaura"],
     links: [
-      { label: L.site, href: "https://estudiorestaura.vercel.app" },
+      { label: L.site, href: "https://estudiorestaura.com.br" },
     ],
   },
   {
@@ -127,15 +127,15 @@ const projectDefs: ProjectDef[] = [
     slug: "mobiletto",
     name: "Mobiletto",
     year: "2026",
-    role: ROLE_DD,
+    role: ROLE_FULL,
     scope: {
-      en: "Website for a bespoke office-furniture maker. Editorial layout, a catalogue of product lines and spaces, and clean navigation that lets the product speak.",
-      pt: "Site institucional de mobiliário corporativo sob medida. Layout editorial, catálogo de linhas e ambientes, e uma navegação limpa que deixa o produto falar.",
+      en: "Website for a bespoke office-furniture maker, with a full admin panel. Editorial layout, product catalogue, case studies and jobs — and a dashboard where the team edits every page, the catalogue, cases and the quote popup, with leads and messages in one place.",
+      pt: "Site institucional de mobiliário corporativo sob medida, com painel administrativo completo. Layout editorial, catálogo, cases e vagas — e um painel onde a equipe edita cada página, o catálogo, os cases e o popup de orçamento, com leads e mensagens num só lugar.",
     },
     stack: ["Next.js", "Tailwind", "Vercel"],
     shots: ["mobiletto"],
     links: [
-      { label: L.site, href: "https://mobiletto.vercel.app" },
+      { label: L.site, href: "https://www.mobiletto.com.br" },
     ],
   },
   {

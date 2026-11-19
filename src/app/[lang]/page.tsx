@@ -4,8 +4,8 @@ import { notFound } from "next/navigation";
 import Portfolio, { type Shot, type WorkItem } from "@/components/Portfolio";
 import { getContent, isLocale } from "@/content";
 
-// Ordem dos prints: seções da home (desk-*), páginas internas (page-*), celular (mob-*)
-const ORDER = ["desk", "page", "mob"];
+// Ordem dos prints: seções da home (desk-*), páginas internas (page-*), painel/admin (panel-*), celular (mob-*)
+const ORDER = ["desk", "page", "panel", "mob"];
 
 function shotsFor(folder: string): Shot[] {
   const dir = path.join(process.cwd(), "public", "work", folder);

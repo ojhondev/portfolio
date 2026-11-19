@@ -5,13 +5,13 @@ import { mkdir } from "node:fs/promises";
 import path from "node:path";
 
 const PROJECTS = [
-  { slug: "estudiorestaura", url: "https://estudiorestaura.vercel.app" },
+  { slug: "estudiorestaura", url: "https://estudiorestaura.com.br" },
   { slug: "dattis", url: "https://dattum-rho.vercel.app" },
   { slug: "archray", url: "https://archray.com.br" },
   { slug: "stokys", url: "https://stokys.vercel.app" },
   { slug: "softmotors", url: "https://softmotors.vercel.app" },
   { slug: "temaranger", url: "https://temaranger.vercel.app" },
-  { slug: "mobiletto", url: "https://mobiletto.vercel.app" },
+  { slug: "mobiletto", url: "https://www.mobiletto.com.br" },
   { slug: "galeriasacra", url: "https://galeriasacra.vercel.app" },
 ];
 
