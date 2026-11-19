@@ -83,8 +83,8 @@ const projectDefs: ProjectDef[] = [
     year: "2026",
     role: ROLE_FULL,
     scope: {
-      en: "AI-assisted damage mapping for building façades: from rectified elevations it produces cost estimates, a GUT priority matrix and a PDF report. Built for first-time users — one clear action per screen.",
-      pt: "Mapa de danos com IA assistida: a partir de vistas retificadas de fachadas, gera orçamento, matriz GUT e laudo em PDF. Fluxo pensado para quem nunca usou a ferramenta — uma ação clara por tela.",
+      en: "3D surveys and point clouds with in-house technology — no laser scanner, no drone. A proprietary app with LiDAR and built-in AI captures the building on video and generates rectified images, a 3D model and a damage map, delivering report, cost estimate and priorities.",
+      pt: "Levantamento 3D e nuvem de pontos com tecnologia própria, sem laser scanner nem drone. Um aplicativo próprio com LiDAR e IA embutida capta a edificação em vídeo e gera imagens retificadas, modelo 3D e mapa de danos, entregando laudo, orçamento e prioridades.",
     },
     stack: ["Next.js", "AI", "PDF", "Vercel"],
     shots: ["archray"],
@@ -105,22 +105,6 @@ const projectDefs: ProjectDef[] = [
     shots: ["stokys"],
     links: [
       { label: L.site, href: "https://stokys.vercel.app" },
-    ],
-  },
-  {
-    slug: "softmotors",
-    name: "SoftMotors",
-    year: "2026",
-    role: ROLE_FULL,
-    scope: {
-      en: "A software house for car dealerships and its flagship product, the Ranger theme: a full-width pre-owned car storefront with marketplace integrations and the Torque dashboard to manage inventory and showcase.",
-      pt: "Software house para concessionárias e o seu produto principal, o tema Ranger: site de seminovos full width com integração a marketplaces e o painel Torque para gerenciar estoque e vitrine.",
-    },
-    stack: ["Next.js", "Tailwind", "Neon", "Vercel"],
-    shots: ["softmotors", "temaranger"],
-    links: [
-      { label: { en: "SoftMotors", pt: "SoftMotors" }, href: "https://softmotors.vercel.app" },
-      { label: { en: "Ranger theme", pt: "Tema Ranger" }, href: "https://temaranger.vercel.app" },
     ],
   },
   {
@@ -166,7 +150,7 @@ const dict = {
     bio: [
       "I’m a systems analyst graduated from FATEC, with a focus on Software Engineering.",
       "Today I work in web development with a product focus, building apps of every size: from brand websites to complex, traditional software. I love taking a raw idea and turning it into something people actually use — with its own character, fast, and live.",
-      "Over the last months I’ve built animated brand websites, e-commerce stores with admin dashboards and full SaaS products for data privacy, architecture, retail and car dealerships.",
+      "Over the last months I’ve built animated brand websites, e-commerce stores with admin dashboards and full SaaS products for data privacy, architecture, retail and corporate furniture.",
       "I work with Next.js, React, Tailwind, Postgres (Neon) and Vercel, and I use AI as a force multiplier: the time it saves goes into what matters — product, detail and business.",
       "If you have a project and need someone to own it end to end, let’s talk.",
     ],
@@ -211,7 +195,7 @@ const dict = {
     bio: [
       "Sou analista de sistemas formado pela FATEC, com foco em Engenharia de Software.",
       "Hoje trabalho com desenvolvimento web com foco em produto, criando aplicativos de todos os tamanhos: de sites institucionais a softwares tradicionais complexos. Gosto de pegar uma ideia ainda crua e transformar em algo que as pessoas usam de verdade — com cara própria, rápido e no ar.",
-      "Nos últimos meses construí sites institucionais animados, e-commerces com painel administrativo e SaaS completos para LGPD, arquitetura, varejo e concessionárias.",
+      "Nos últimos meses construí sites institucionais animados, e-commerces com painel administrativo e SaaS completos para LGPD, arquitetura, varejo e mobiliário corporativo.",
       "Trabalho com Next.js, React, Tailwind, Postgres (Neon) e Vercel, e uso IA como multiplicador de força: o tempo que sobra vai para o que importa — produto, detalhe e negócio.",
       "Se você tem um projeto e precisa de alguém que resolva de ponta a ponta, vamos conversar.",
     ],

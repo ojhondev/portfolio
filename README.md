@@ -1,6 +1,6 @@
 # Portfólio — Jhonatan Ribeiro
 
-Portfólio pessoal com os projetos que construí: Estúdio Restaura, Dattis, ArchRay, Stokys, SoftMotors + Tema Ranger, Mobiletto, Galeria Sacra e Ominia.
+Portfólio pessoal com os projetos que construí: Estúdio Restaura, Dattis, ArchRay, Stokys, Mobiletto e Galeria Sacra.
 
 **Stack:** Next.js 16 · React 19 · Tailwind v4 · Motion · Canvas 2D
 

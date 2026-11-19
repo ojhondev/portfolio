@@ -9,8 +9,6 @@ const PROJECTS = [
   { slug: "dattis", url: "https://dattum-rho.vercel.app" },
   { slug: "archray", url: "https://archray.com.br" },
   { slug: "stokys", url: "https://stokys.vercel.app" },
-  { slug: "softmotors", url: "https://softmotors.vercel.app" },
-  { slug: "temaranger", url: "https://temaranger.vercel.app" },
   { slug: "mobiletto", url: "https://www.mobiletto.com.br" },
   { slug: "galeriasacra", url: "https://galeriasacra.vercel.app" },
 ];
@@ -39,7 +37,10 @@ async function clean(page) {
     for (let i = 0; i < count; i++) {
       const b = buttons.nth(i);
       const t = (await b.innerText({ timeout: 200 }).catch(() => "")) || (await b.getAttribute("aria-label").catch(() => "")) || "";
-      if (labels.test(t) && (await b.isVisible().catch(() => false))) {
+      // botões só com ícone (×) costumam ter aria-label tipo "Fechar aviso"
+      const aria = (await b.getAttribute("aria-label").catch(() => "")) || "";
+      const isClose = labels.test(t) || /fechar|close|dispensar|dismiss/i.test(aria);
+      if (isClose && (await b.isVisible().catch(() => false))) {
         const inOverlay = await b.evaluate((el) => {
           let n = el;
           while (n && n !== document.body) {
